@@ -6,3 +6,5 @@ seaborn>=0.13
 statsmodels>=0.14
 scikit-learn>=1.4
 ipykernel>=7.4.0
+jupyterlab>=4.0
+nbconvert>=7.0
