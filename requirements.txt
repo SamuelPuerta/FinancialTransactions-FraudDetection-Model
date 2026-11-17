@@ -5,6 +5,7 @@ matplotlib>=3.8
 seaborn>=0.13
 statsmodels>=0.14
 scikit-learn>=1.4
+imbalanced-learn>=0.12
 ipykernel>=7.4.0
 jupyterlab>=4.0
 nbconvert>=7.0

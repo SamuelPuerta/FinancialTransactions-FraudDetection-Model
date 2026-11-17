@@ -39,10 +39,12 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 ```
 .
 ├── data/
-│   └── synthetic_financial_transactions.csv
+│   ├── synthetic_financial_transactions.csv
+│   └── caracteristicas.csv             # Matriz de características (generada por el notebook 01)
 ├── notebooks/
 │   ├── 01_descripcion_problema.ipynb   # Sección 2: EDA, caracterización, preprocesamiento
-│   └── 02_estado_del_arte.ipynb        # Sección 3: revisión de literatura
+│   ├── 02_estado_del_arte.ipynb        # Sección 3: revisión de literatura
+│   └── 03_modelos.ipynb                # Sección 4: entrenamiento y evaluación de modelos
 ├── report/
 │   ├── main.tex                        # Reporte en plantilla IEEE Transactions
 │   ├── referencias.bib
@@ -53,8 +55,9 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 
 | Notebook | Sección de la guía | Contenido |
 |---|---|---|
-| `01_descripcion_problema.ipynb` | 2. Descripción del problema | Composición del dataset, desbalance, análisis de variables, fase de caracterización (variables de comportamiento por usuario), preprocesamiento y paradigma |
+| `01_descripcion_problema.ipynb` | 2. Descripción del problema | Composición del dataset, desbalance, análisis de variables, fase de caracterización (variables de comportamiento por usuario, puntaje de anomalía respecto al historial y búsqueda de otras fuentes de señal), preprocesamiento y paradigma. Genera `data/caracteristicas.csv` |
 | `02_estado_del_arte.ipynb` | 3. Estado del arte | Revisión de 5 artículos y definición de métricas |
+| `03_modelos.ipynb` | 4. Entrenamiento y evaluación | Configuración experimental, 6 modelos con ajuste de hiperparámetros, ablación por grupos de variables (con y sin `risk_score`) y evaluación en prueba |
 
 ## Cómo reproducir los resultados
 
