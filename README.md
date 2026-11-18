@@ -44,9 +44,10 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 ├── notebooks/
 │   ├── 01_descripcion_problema.ipynb   # Sección 2: EDA, caracterización, preprocesamiento
 │   ├── 02_estado_del_arte.ipynb        # Sección 3: revisión de literatura
-│   └── 03_modelos.ipynb                # Sección 4: entrenamiento y evaluación de modelos
+│   ├── 03_modelos.ipynb                # Sección 4: entrenamiento y evaluación de modelos
+│   └── 04_controles_y_paradigmas.ipynb # Sección 4 (complemento): controles de desbalance, modelos de una clase, validación temporal
 ├── report/
-│   ├── main.tex                        # Reporte en plantilla IEEE Transactions
+│   ├── main.tex                        # Reporte en plantilla IEEE Transactions (en elaboración)
 │   ├── referencias.bib
 │   └── figures/                        # Figuras generadas por los notebooks (PDF y PNG)
 ├── requirements.txt
@@ -57,7 +58,8 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 |---|---|---|
 | `01_descripcion_problema.ipynb` | 2. Descripción del problema | Composición del dataset, desbalance, análisis de variables, fase de caracterización (variables de comportamiento por usuario, puntaje de anomalía respecto al historial y búsqueda de otras fuentes de señal), preprocesamiento y paradigma. Genera `data/caracteristicas.csv` |
 | `02_estado_del_arte.ipynb` | 3. Estado del arte | Revisión de 5 artículos y definición de métricas |
-| `03_modelos.ipynb` | 4. Entrenamiento y evaluación | Configuración experimental, 6 modelos con ajuste de hiperparámetros, ablación por grupos de variables (con y sin `risk_score`) y evaluación en prueba |
+| `03_modelos.ipynb` | 4. Entrenamiento y evaluación | Configuración experimental, 6 modelos (regresión logística, KNN, Random Forest balanceado, gradient boosting, red neuronal y SVM) con ajuste de hiperparámetros, ablación por grupos de variables (con y sin `risk_score` y con y sin las variables de historial), evaluación en prueba y validación cruzada anidada |
+| `04_controles_y_paradigmas.ipynb` | 4. (complemento) | Techo de desempeño, intervalos con corrección de Nadeau–Bengio, controles de desbalance (ponderación, submuestreo por árbol, SMOTENC), indicador de umbral aprendido, comparación con detección de anomalías y clasificación de una clase, historial de `risk_score`, validación temporal y análisis de errores. Requiere `data/caracteristicas.csv` |
 
 ## Cómo reproducir los resultados
 
@@ -86,17 +88,18 @@ cd notebooks
 jupyter nbconvert --to notebook --execute --inplace 01_descripcion_problema.ipynb
 ```
 
-Los notebooks usan rutas relativas (`../data`, `../report/figures`), por lo que deben ejecutarse **desde la carpeta `notebooks/`**. Al ejecutar `01_descripcion_problema.ipynb` se regeneran las figuras de `report/figures/`.
+**Orden de ejecución:** 01 → 03 → 04 (el notebook 01 genera `data/caracteristicas.csv`, que cargan el 03 y el 04). Los notebooks usan rutas relativas (`../data`, `../report/figures`), por lo que deben ejecutarse **desde la carpeta `notebooks/`**. Al ejecutar `01_descripcion_problema.ipynb` se regeneran las figuras de `report/figures/`.
 
 ## Reporte
 
-El reporte está en `report/main.tex` (plantilla IEEE Transactions, clase `IEEEtran`). Para compilarlo, se sube la carpeta `report/` a Overleaf (*New Project → Upload Project*) o se compila localmente con `pdflatex` + `bibtex`. El PDF compilado se guarda como `report/reporte.pdf`.
+El reporte (en elaboración) estará en `report/main.tex` (plantilla IEEE Transactions, clase `IEEEtran`). Para compilarlo, se sube la carpeta `report/` a Overleaf (*New Project → Upload Project*) o se compila localmente con `pdflatex` + `bibtex`. El PDF compilado se guarda como `report/reporte.pdf`.
 
 ## Metodología (resumen)
 
 - **Paradigma:** aprendizaje supervisado, clasificación binaria con clases muy desbalanceadas.
-- **Caracterización:** variables temporales (hora cíclica, fin de semana) y de comportamiento por usuario calculadas solo con transacciones previas; 35 columnas tras la codificación.
-- **Validación:** validación cruzada estratificada con conjunto de test reservado; los preprocesadores se ajustan solo con datos de entrenamiento (sin fuga de información).
-- **Modelos:** regresión logística, KNN, Random Forest, red neuronal (MLP) y SVM.
-- **Métricas:** PR-AUC (principal), recall, precisión, F1, MCC, ROC-AUC y exactitud balanceada, con intervalos de confianza.
+- **Caracterización:** variables temporales (hora cíclica, fin de semana) y de comportamiento por usuario calculadas solo con transacciones previas; entre 23 y 37 columnas tras la codificación según el conjunto de variables (A: originales; B: caracterizadas; C: originales + `risk_score`; D: caracterizadas + `risk_score`).
+- **Validación:** partición de prueba del 20 %, validación cruzada estratificada de 5 particiones repetida 2 veces para ajustar hiperparámetros y validación cruzada anidada como estimación principal; los preprocesadores se ajustan solo con datos de entrenamiento (sin fuga de información). Los intervalos de confianza de la validación cruzada usan la corrección de Nadeau y Bengio.
+- **Desbalance:** ponderación de clases y Random Forest balanceado (submuestreo por árbol), con controles (sin tratamiento y SMOTENC).
+- **Modelos:** regresión logística, KNN, Random Forest balanceado, gradient boosting, red neuronal (MLP) y SVM; como contraste, modelos de una clase (Isolation Forest, LOF, One-Class SVM y Mahalanobis).
+- **Métricas:** PR-AUC (principal) y recall en el 2 % de transacciones con mayor puntaje, además de precisión, ROC-AUC y otras, con intervalos de confianza.
 - **Reducción de dimensión:** PCA y UMAP, con reajuste de hiperparámetros en cada espacio.
