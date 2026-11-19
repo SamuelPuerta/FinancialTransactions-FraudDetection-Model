@@ -46,7 +46,8 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 │   ├── 02_estado_del_arte.ipynb        # Sección 3: revisión de literatura
 │   ├── 03_modelos.ipynb                # Sección 4: entrenamiento y evaluación de modelos
 │   ├── 04_controles_y_paradigmas.ipynb # Sección 4 (complemento): controles de desbalance, modelos de una clase, validación temporal
-│   └── 05_reduccion_dimension.ipynb    # Sección 5: análisis individual de variables, PCA y UMAP
+│   ├── 05_reduccion_dimension.ipynb    # Sección 5: análisis individual de variables, PCA y UMAP
+│   └── 06_discusion_y_modelo_final.ipynb # Ítem 12: discusión, modelo final y comparación con el estado del arte
 ├── report/
 │   ├── main.tex                        # Reporte en plantilla IEEE Transactions (pendiente: aún no está en el repositorio)
 │   ├── referencias.bib
@@ -62,6 +63,7 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 | `03_modelos.ipynb` | 4. Entrenamiento y evaluación | Configuración experimental, 6 modelos (regresión logística, KNN, Random Forest balanceado, gradient boosting, red neuronal y SVM) con ajuste de hiperparámetros, ablación por grupos de variables (con y sin `risk_score` y con y sin las variables de historial), evaluación en prueba y validación cruzada anidada |
 | `04_controles_y_paradigmas.ipynb` | 4. (complemento) | Techo de desempeño, intervalos con corrección de Nadeau–Bengio, controles de desbalance (ponderación, submuestreo por árbol, SMOTENC), indicador de umbral aprendido, comparación con detección de anomalías y clasificación de una clase, historial de `risk_score`, validación temporal y análisis de errores. Requiere `data/caracteristicas.csv` |
 | `05_reduccion_dimension.ipynb` | 5. Reducción de dimensión | Análisis individual de las 22 variables (AUC, Mann-Whitney, V de Cramér, corrección de Benjamini–Hochberg) e importancia por permutación; selección de variables, PCA y UMAP con reajuste de hiperparámetros para los dos mejores modelos de la sección 4; tabla final con porcentaje de reducción. Requiere `data/caracteristicas.csv` y `umap-learn` |
+| `06_discusion_y_modelo_final.ipynb` | 5. Discusión y conclusiones (ítem 12) | Estructura de la etiqueta (por qué existe un techo de desempeño), modelo final recomendado, punto de operación (cuántas alertas revisar), ahorro económico, prueba de permutación, curva de aprendizaje y comparación con el estado del arte. Requiere `data/caracteristicas.csv` |
 
 ## Cómo reproducir los resultados
 
@@ -90,9 +92,9 @@ cd notebooks
 jupyter nbconvert --to notebook --execute --inplace 01_descripcion_problema.ipynb
 ```
 
-**Orden de ejecución:** 01 → 03 → 04 → 05 (el notebook 01 genera `data/caracteristicas.csv`, que cargan el 03, el 04 y el 05; el 02 es solo texto). Los notebooks usan rutas relativas (`../data`, `../report/figures`), por lo que deben ejecutarse **desde la carpeta `notebooks/`**. Cada notebook regenera sus figuras en `report/figures/`.
+**Orden de ejecución:** 01 → 03 → 04 → 05 → 06 (el notebook 01 genera `data/caracteristicas.csv`, que cargan el 03, el 04, el 05 y el 06; el 02 es solo texto). Los notebooks usan rutas relativas (`../data`, `../report/figures`), por lo que deben ejecutarse **desde la carpeta `notebooks/`**. Cada notebook regenera sus figuras en `report/figures/`.
 
-**Tiempo de ejecución y núcleos.** Los notebooks 03 y 05 hacen búsquedas en malla en paralelo con `N_JOBS` procesos (por defecto 6), que se ajusta en su celda de configuración según la máquina. Como referencia, el notebook 03 tardó unos 12 minutos usando todos los núcleos de la máquina (con menos procesos tarda más), y el 05 se estima en una hora con un solo núcleo. Para que el gradient boosting no use todos los núcleos dentro de cada proceso, conviene fijar `OMP_NUM_THREADS=1` antes de abrir Jupyter.
+**Tiempo de ejecución y núcleos.** Los notebooks 03, 05 y 06 trabajan en paralelo con `N_JOBS` procesos (por defecto 6), que se ajusta en su celda de configuración según la máquina. Como referencia, con 6 procesos el notebook 03 tarda unos 22 minutos, el 05 unos 40 minutos y el 06 unos 10 minutos. Para que el gradient boosting no use todos los núcleos dentro de cada proceso, conviene fijar `OMP_NUM_THREADS=1` antes de abrir Jupyter.
 
 ## Reporte
 
@@ -106,4 +108,5 @@ El reporte (en elaboración) estará en `report/main.tex` (plantilla IEEE Transa
 - **Desbalance:** ponderación de clases y Random Forest balanceado (submuestreo por árbol), con controles (sin tratamiento y SMOTENC).
 - **Modelos:** regresión logística, KNN, Random Forest balanceado, gradient boosting, red neuronal (MLP) y SVM; como contraste, modelos de una clase (Isolation Forest, LOF, One-Class SVM y Mahalanobis).
 - **Métricas:** PR-AUC (principal) y recall en el 2 % de transacciones con mayor puntaje, además de precisión, ROC-AUC y otras, con intervalos de confianza.
-- **Reducción de dimensión:** PCA y UMAP, con reajuste de hiperparámetros en cada espacio.
+- **Reducción de dimensión:** selección de variables, PCA y UMAP, con reajuste de hiperparámetros en cada espacio.
+- **Discusión y modelo final:** análisis de por qué existe un techo de desempeño, punto de operación, ahorro económico (Correa Bahnsen et al.), prueba de permutación, curva de aprendizaje y comparación con el estado del arte.
