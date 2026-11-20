@@ -47,7 +47,8 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 │   ├── 03_modelos.ipynb                # Sección 4: entrenamiento y evaluación de modelos
 │   ├── 04_controles_y_paradigmas.ipynb # Sección 4 (complemento): controles de desbalance, modelos de una clase, validación temporal y agrupada por usuario
 │   ├── 05_reduccion_dimension.ipynb    # Sección 5: análisis individual de variables, PCA y UMAP
-│   └── 06_discusion_y_modelo_final.ipynb # Ítem 12: discusión, modelo final y comparación con el estado del arte
+│   ├── 06_protocolo_temporal.ipynb     # Asesoría: protocolo temporal, probabilidades de historial y anomalías
+│   └── 07_discusion_y_modelo_final.ipynb # Ítem 12: discusión, modelo final y comparación con el estado del arte
 ├── report/
 │   ├── main.tex                        # Reporte en plantilla IEEE Transactions (pendiente: aún no está en el repositorio)
 │   ├── referencias.bib
@@ -63,7 +64,8 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 | `03_modelos.ipynb`                  | 4. Entrenamiento y evaluación     | Configuración experimental, 6 modelos (regresión logística, KNN, Random Forest balanceado, gradient boosting, red neuronal y SVM) con ajuste de hiperparámetros, ablación por grupos de variables (con y sin `risk_score` y con y sin las variables de historial), evaluación en prueba y validación cruzada anidada                                                         |
 | `04_controles_y_paradigmas.ipynb`   | 4. (complemento)                  | Techo de desempeño, intervalos con corrección de Nadeau–Bengio, controles de desbalance (ponderación, submuestreo por árbol, SMOTENC), indicador de umbral aprendido, comparación con detección de anomalías y clasificación de una clase, historial de `risk_score`, validación temporal y agrupada por usuario, y análisis de errores. Requiere `data/caracteristicas.csv` |
 | `05_reduccion_dimension.ipynb`      | 5. Reducción de dimensión         | Análisis individual de las 22 variables (AUC, Mann-Whitney, V de Cramér, corrección de Benjamini–Hochberg) e importancia por permutación; selección de variables, PCA y UMAP con reajuste de hiperparámetros para los dos mejores modelos de la sección 4; tabla final con porcentaje de reducción. Requiere `data/caracteristicas.csv` y `umap-learn`                       |
-| `06_discusion_y_modelo_final.ipynb` | Ítem 12: discusión y modelo final | Estructura de la etiqueta (por qué existe un techo de desempeño), modelo final recomendado (regla de umbral), punto de operación (cuántas alertas revisar), ahorro económico, prueba de permutación, curva de aprendizaje y comparación con el estado del arte. Requiere `data/caracteristicas.csv`                                                                          |
+| `06_protocolo_temporal.ipynb`       | 4. (complemento, asesoría)        | Recomendaciones de la asesoría con el profesor: probabilidades 0–1 de frecuencia de cada atributo en el historial del usuario (sin la propia transacción, con toda la historia y con ventana de 30 días) y verificación causal; los seis modelos con ajuste de hiperparámetros por validación cruzada temporal, partición temporal 80/20 y *backtesting* mensual, con y sin `risk_score`; comparación con la partición aleatoria; Isolation Forest y One-Class SVM sobre las probabilidades; control positivo de una moneda nueva; modelo final con todas las variables. Requiere `data/caracteristicas.csv` |
+| `07_discusion_y_modelo_final.ipynb` | Ítem 12: discusión y modelo final | Estructura de la etiqueta (por qué existe un techo de desempeño), modelo final con todas las variables y alternativa parsimoniosa (regla de umbral), punto de operación (cuántas alertas revisar), ahorro económico, prueba de permutación, curva de aprendizaje y comparación con el estado del arte. Requiere `data/caracteristicas.csv`                                                                          |
 
 ## Cómo reproducir los resultados
 
@@ -92,9 +94,9 @@ cd notebooks
 jupyter nbconvert --to notebook --execute --inplace 01_descripcion_problema.ipynb
 ```
 
-**Orden de ejecución:** 01 → 03 → 04 → 05 → 06 (el notebook 01 genera `data/caracteristicas.csv`, que cargan el 03, el 04, el 05 y el 06; el 02 es solo texto). Los notebooks usan rutas relativas (`../data`, `../report/figures`), por lo que deben ejecutarse **desde la carpeta `notebooks/`**. Los notebooks que generan figuras las guardan en `report/figures/`.
+**Orden de ejecución:** 01 → 03 → 04 → 05 → 06 → 07 (el notebook 01 genera `data/caracteristicas.csv`, que cargan los notebooks 03 a 07; el 02 es solo texto). Los notebooks usan rutas relativas (`../data`, `../report/figures`), por lo que deben ejecutarse **desde la carpeta `notebooks/`**. Los notebooks que generan figuras las guardan en `report/figures/`.
 
-**Tiempo de ejecución y núcleos.** Los notebooks 03, 05 y 06 trabajan en paralelo con `N_JOBS` procesos (por defecto 6), que se ajusta en su celda de configuración según la máquina. Como referencia, con 6 procesos el notebook 03 tarda unos 22 minutos, el 05 unos 40 minutos y el 06 unos 10 minutos. Para que el gradient boosting no use todos los núcleos dentro de cada proceso, conviene fijar `OMP_NUM_THREADS=1` antes de abrir Jupyter.
+**Tiempo de ejecución y núcleos.** Los notebooks 03, 05, 06 y 07 trabajan en paralelo con `N_JOBS` procesos (por defecto 6), que se ajusta en su celda de configuración según la máquina. Como referencia, con 6 procesos el notebook 03 tarda unos 22 minutos, el 05 unos 40 minutos, el 06 se estima en unos 40 minutos y el 07 tarda unos 10 minutos. Para que el gradient boosting no use todos los núcleos dentro de cada proceso, conviene fijar `OMP_NUM_THREADS=1` antes de abrir Jupyter.
 
 ## Reporte
 
@@ -109,4 +111,5 @@ El reporte (en elaboración) estará en `report/main.tex` (plantilla IEEE Transa
 - **Modelos:** regresión logística, KNN, Random Forest balanceado, gradient boosting, red neuronal (MLP) y SVM; como contraste, modelos de una clase (Isolation Forest, LOF, One-Class SVM y Mahalanobis).
 - **Métricas:** PR-AUC (principal) y precisión y recall al revisar el 1 % y el 2 % de las transacciones con mayor puntaje, además de ROC-AUC y otras, con intervalos de confianza.
 - **Reducción de dimensión:** selección de variables, PCA y UMAP, con reajuste de hiperparámetros en cada espacio.
+- **Protocolo temporal (asesoría):** probabilidades de historial por usuario, ajuste de hiperparámetros con validación cruzada temporal, partición temporal 80/20 y *backtesting* mensual, detección de anomalías sobre el historial y modelo final con todas las variables.
 - **Discusión y modelo final:** análisis de por qué existe un techo de desempeño, punto de operación, ahorro económico (Correa Bahnsen et al.), prueba de permutación, curva de aprendizaje y comparación con el estado del arte.
