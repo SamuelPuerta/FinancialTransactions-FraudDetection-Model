@@ -12,6 +12,10 @@ Proyecto final del curso **Modelos y Simulación II**, Universidad de Antioquia,
 
 Este proyecto construye y compara modelos de aprendizaje de máquina para predecir si una transacción financiera es fraudulenta (`is_fraud`), siguiendo la guía oficial del curso. Incluye análisis exploratorio, revisión del estado del arte, comparación de modelos con ajuste de hiperparámetros, evaluación de técnicas de reducción de dimensión y discusión del modelo final.
 
+## Video
+
+Presentación del proyecto (10 minutos): [ver en YouTube](https://youtu.be/Fqi97Smmof4)
+
 ## Dataset
 
 [Financial Transactions & Fraud Detection Dataset (Kaggle)](https://www.kaggle.com/datasets/greatcool/financial-transactions-and-fraud-detection-dataset)
