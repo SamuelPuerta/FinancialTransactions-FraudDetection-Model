@@ -70,7 +70,7 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 
 ## Cómo reproducir los resultados
 
-Requiere Python 3.10 o superior.
+Requiere Python 3.11 o superior. Los resultados guardados en los notebooks se generaron con Python 3.11.9 y las versiones exactas de `requirements.txt`; con otras versiones de las librerías algunas cifras pueden variar ligeramente.
 
 ```bash
 # 1. Clonar el repositorio
@@ -97,10 +97,9 @@ jupyter nbconvert --to notebook --execute --inplace 01_descripcion_problema.ipyn
 
 **Orden de ejecución:** 01 → 03 → 04 → 05 → 06 → 07 (el notebook 01 genera `data/caracteristicas.csv`, que cargan los notebooks 03 a 07; el 02 es solo texto). Los notebooks usan rutas relativas (`../data`, `../report/figures`), por lo que deben ejecutarse **desde la carpeta `notebooks/`**. Los notebooks que generan figuras las guardan en `report/figures/`.
 
-**Tiempo de ejecución y núcleos.** Los notebooks 03, 05, 06 y 07 trabajan en paralelo con `N_JOBS` procesos (por defecto 6), que se ajusta en su celda de configuración según la máquina. Como referencia, con 6 procesos el notebook 03 tarda unos 22 minutos, el 05 unos 40 minutos, el 06 se estima en unos 40 minutos y el 07 tarda unos 10 minutos. Para que el gradient boosting no use todos los núcleos dentro de cada proceso, conviene fijar `OMP_NUM_THREADS=1` antes de abrir Jupyter.
+**Tiempo de ejecución y núcleos.** Los notebooks 03, 05, 06 y 07 trabajan en paralelo con `N_JOBS` procesos (por defecto 6), que se ajusta en su celda de configuración según la máquina. Como referencia, con 6 procesos el notebook 03 tarda unos 22 minutos, el 05 unos 40 minutos, el 06 unos 20 minutos y el 07 unos 10 minutos. Para que el gradient boosting no use todos los núcleos dentro de cada proceso, conviene fijar `OMP_NUM_THREADS=1` antes de abrir Jupyter.
 
 ## Reporte
-
 El informe final está en `Informe Final.pdf` (plantilla IEEE Transactions). Sus figuras se generan con los notebooks y se guardan en `report/figures/`.
 
 ## Metodología (resumen)
