@@ -50,9 +50,10 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 │   ├── 06_protocolo_temporal.ipynb     # Asesoría: protocolo temporal, probabilidades de historial y anomalías
 │   └── 07_discusion_y_modelo_final.ipynb # Ítem 12: discusión, modelo final y comparación con el estado del arte
 ├── report/
-│   ├── main.tex                        # Reporte en plantilla IEEE Transactions
-│   ├── referencias.bib
 │   └── figures/                        # Figuras generadas por los notebooks (PDF y PNG)
+├── references/                         # Artículos del estado del arte
+├── Informe Final.pdf                   # Informe final (plantilla IEEE Transactions)
+├── Informe Primera Entrega.pdf         # Informe de la primera entrega (secciones 2 y 3)
 ├── requirements.txt
 └── README.md
 ```
@@ -100,7 +101,7 @@ jupyter nbconvert --to notebook --execute --inplace 01_descripcion_problema.ipyn
 
 ## Reporte
 
-El reporte está en `report/main.tex` (plantilla IEEE Transactions, clase `IEEEtran`). Para compilarlo, se sube la carpeta `report/` a Overleaf (_New Project → Upload Project_) o se compila localmente con `pdflatex` + `bibtex`. El PDF compilado se guarda como `report/reporte.pdf`.
+El informe final está en `Informe Final.pdf` (plantilla IEEE Transactions). Sus figuras se generan con los notebooks y se guardan en `report/figures/`.
 
 ## Metodología (resumen)
 
