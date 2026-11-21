@@ -50,9 +50,10 @@ Este proyecto construye y compara modelos de aprendizaje de máquina para predec
 │   ├── 06_protocolo_temporal.ipynb     # Asesoría: protocolo temporal, probabilidades de historial y anomalías
 │   └── 07_discusion_y_modelo_final.ipynb # Ítem 12: discusión, modelo final y comparación con el estado del arte
 ├── report/
-│   ├── Detección_de_fraude_en_transacciones_financieras_con_aprendizaje_de_máquina.pdf  # Informe final (plantilla IEEE Transactions)
-│   ├── referencias.bib                 # Referencias del informe
 │   └── figures/                        # Figuras generadas por los notebooks (PDF y PNG)
+├── references/                         # Artículos del estado del arte
+├── Informe Final.pdf                   # Informe final (plantilla IEEE Transactions)
+├── Informe Primera Entrega.pdf         # Informe de la primera entrega (secciones 2 y 3)
 ├── requirements.txt
 └── README.md
 ```
@@ -99,8 +100,7 @@ jupyter nbconvert --to notebook --execute --inplace 01_descripcion_problema.ipyn
 **Tiempo de ejecución y núcleos.** Los notebooks 03, 05, 06 y 07 trabajan en paralelo con `N_JOBS` procesos (por defecto 6), que se ajusta en su celda de configuración según la máquina. Como referencia, con 6 procesos el notebook 03 tarda unos 22 minutos, el 05 unos 40 minutos, el 06 unos 20 minutos y el 07 unos 10 minutos. Para que el gradient boosting no use todos los núcleos dentro de cada proceso, conviene fijar `OMP_NUM_THREADS=1` antes de abrir Jupyter.
 
 ## Reporte
-
-El informe final está en `report/Detección_de_fraude_en_transacciones_financieras_con_aprendizaje_de_máquina.pdf` (plantilla IEEE Transactions, clase `IEEEtran`). Sus referencias están en `report/referencias.bib` y sus figuras, generadas por los notebooks, en `report/figures/`. El código fuente LaTeX del informe no está incluido en el repositorio.
+El informe final está en `Informe Final.pdf` (plantilla IEEE Transactions). Sus figuras se generan con los notebooks y se guardan en `report/figures/`.
 
 ## Metodología (resumen)
 
